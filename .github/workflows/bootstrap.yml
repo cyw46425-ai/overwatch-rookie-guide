@@ -1,0 +1,157 @@
+name: Bootstrap OW Assistant source
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/bootstrap.yml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ow-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  sync-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download verified release files
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://overwatch-rookie-guide.cyw46425.chatgpt.site"
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            mkdir -p "dist/$(dirname "$file")"
+            curl --fail --location --retry 4 --retry-delay 2 "$base/$file" --output "dist/$file"
+          done <<'OW_FILES'
+app.js
+assets/arena-command-center.png
+assets/heroes/ana.png
+assets/heroes/anran.png
+assets/heroes/ashe.png
+assets/heroes/baptiste.png
+assets/heroes/bastion.png
+assets/heroes/brigitte.png
+assets/heroes/cassidy.png
+assets/heroes/dmon.png
+assets/heroes/domina.png
+assets/heroes/doomfist.png
+assets/heroes/dva.png
+assets/heroes/echo.png
+assets/heroes/emre.png
+assets/heroes/freja.png
+assets/heroes/genji.png
+assets/heroes/hanzo.png
+assets/heroes/hazard.png
+assets/heroes/illari.png
+assets/heroes/jetpackcat.png
+assets/heroes/junkerqueen.png
+assets/heroes/junkrat.png
+assets/heroes/juno.png
+assets/heroes/kiriko.png
+assets/heroes/lifeweaver.png
+assets/heroes/lucio.png
+assets/heroes/mauga.png
+assets/heroes/mei.png
+assets/heroes/mercy.png
+assets/heroes/mizuki.png
+assets/heroes/moira.png
+assets/heroes/orisa.png
+assets/heroes/pharah.png
+assets/heroes/ramattra.png
+assets/heroes/reaper.png
+assets/heroes/reinhardt.png
+assets/heroes/roadhog.png
+assets/heroes/shion.png
+assets/heroes/sierra.png
+assets/heroes/sigma.png
+assets/heroes/sojourn.png
+assets/heroes/soldier76.png
+assets/heroes/sombra.png
+assets/heroes/symmetra.png
+assets/heroes/torbjorn.png
+assets/heroes/tracer.png
+assets/heroes/vendetta.png
+assets/heroes/venture.png
+assets/heroes/widowmaker.png
+assets/heroes/winston.png
+assets/heroes/wreckingball.png
+assets/heroes/wuyang.png
+assets/heroes/zarya.png
+assets/heroes/zenyatta.png
+assets/maps/circuit-royal.jpg
+assets/maps/dorado.jpg
+assets/maps/eichenwalde.jpg
+assets/maps/kings-row.jpg
+assets/maps/lijiang-tower.jpg
+assets/maps/numbani.jpg
+assets/maps/rialto.jpg
+assets/maps/watchpoint-gibraltar.jpg
+assets/news/blizzcon.png
+assets/news/gallery1.png
+assets/news/gallery2.png
+assets/news/gallery3.png
+assets/news/gallery4.png
+assets/news/owwc.jpg
+assets/video/fun-duck-evolution.jpg
+assets/video/fun-duck-live.jpg
+assets/video/fun-duck-tips.jpg
+assets/video/fun-lu-busan.jpg
+assets/video/fun-lu-misjudge.jpg
+assets/video/fun-lu-thunder.jpg
+assets/video/live-esports.jpg
+assets/video/live-farway.jpg
+assets/video/live-guxue.jpg
+assets/video/live-kyo.jpg
+assets/video/live-leave.jpg
+assets/video/live-shy.jpg
+assets/video/live-sunzo.jpg
+assets/video/teach-aim.jpg
+assets/video/teach-arena.jpg
+assets/video/teach-first-match.jpg
+assets/video/teach-map.jpg
+assets/video/teach-official.jpg
+assets/video/teach-roles.jpg
+heroes-data.js
+index.html
+knowledge.js
+styles.css
+OW_FILES
+          test -s dist/index.html
+          test -s dist/app.js
+          test -s dist/styles.css
+
+      - name: Commit project files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist
+          if ! git diff --cached --quiet; then
+            git commit -m "Import OW Assistant release"
+            git push origin main
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
