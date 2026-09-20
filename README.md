@@ -30,10 +30,11 @@ python -m http.server 8080 --directory dist
 
 ## 发布到 GitHub Pages
 
-仓库内已包含 GitHub Pages 自动发布工作流。推送到 `main` 分支后，在仓库的 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**。
+仓库内已包含 `.github/workflows/pages.yml`。将代码推送到 `main` 分支后，在 GitHub 仓库的 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**，工作流会自动发布 `dist/`。
 
 ## 数据说明
 
 - 英雄、地图、活动、赛事和视频信息来自项目内置知识库与外部链接。
 - 胜率、版本与活动信息具有时效性，正式发布前应再次核对来源和日期。
 - 本项目为非官方玩家工具，与 Blizzard Entertainment 无隶属关系。
+

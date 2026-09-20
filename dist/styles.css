@@ -110,4 +110,3 @@ dialog{background:#101a2b;border-color:rgba(145,170,207,.2);border-radius:16px;b
 /* Final-size overrides for sections declared after the shared readability rules. */
 .dialog-hero-head h2 small,.map-showcase-head>span,.map-showcase button:after,.map-showcase span,.map-showcase small,.offline-poster span{font-size:.72rem}
 .patch-meta span,.patch-section-head>span,.patch-section-head p,.patch-grid article b,.patch-grid article small,.balance-grid p,.balance-grid i,.patch-note p,.archive-grid time,.archive-grid>article>span,.archive-grid p,.archive-grid a,.patch-archive time,.patch-archive span{font-size:.72rem}
-

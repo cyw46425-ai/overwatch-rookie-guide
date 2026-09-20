@@ -210,4 +210,3 @@
   const requestedView=new URLSearchParams(location.search).get("view");
   if(requestedView&&$("#"+requestedView+"-view"))switchView(requestedView);
 })();
-

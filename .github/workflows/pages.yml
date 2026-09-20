@@ -3,9 +3,6 @@ name: Deploy OW Assistant to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - "dist/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
